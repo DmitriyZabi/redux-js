@@ -3,14 +3,10 @@ import '@/styles/scss.scss'
 import { applyMiddleware, createStore } from 'redux'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import { rootReducer } from './redux/rootReducer'
-import {
-  asyncIncrement,
-  changeTheme,
-  decrement,
-  increment,
-} from './redux/actions'
+import { rootReducer } from './redux/reducers/root.reducer'
 import logger from 'redux-logger'
+import { counterActions } from './redux/actions/counter.actions'
+import { themeActions } from './redux/actions/theme.actions'
 
 const $counter = document.querySelector('#counter')
 const $add = document.querySelector('#add')
@@ -36,17 +32,17 @@ const store = createStore(
 )
 
 $add.addEventListener('click', () => {
-  store.dispatch(increment())
+  store.dispatch(counterActions.increment())
 })
 $sub.addEventListener('click', () => {
-  store.dispatch(decrement())
+  store.dispatch(counterActions.decrement())
 })
 $async.addEventListener('click', () => {
-  store.dispatch(asyncIncrement())
+  store.dispatch(counterActions.asyncIncrement())
 })
 $theme.addEventListener('click', () => {
   const newTheme = document.body.classList.contains('light') ? 'dark' : 'light'
-  store.dispatch(changeTheme(newTheme))
+  store.dispatch(themeActions.changeTheme(newTheme))
 })
 
 store.subscribe(() => {
@@ -58,4 +54,5 @@ store.subscribe(() => {
   })
 })
 
-store.dispatch({ type: 'init' })
+store.dispatch(counterActions.init())
+store.dispatch(themeActions.init())
